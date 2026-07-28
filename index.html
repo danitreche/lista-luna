@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7b3fb6" />
+  <title>Lista de Presentes da Luna | Reino Encantado</title>
+  <style>
+    :root {
+      --purple: #6f3ca6;
+      --purple-2: #9f70d3;
+      --pink: #ef8fbd;
+      --gold: #d9aa48;
+      --cream: #fffaf0;
+      --ink: #35263f;
+      --white: #ffffff;
+      --soft: #f7efff;
+      --shadow: 0 16px 45px rgba(78, 45, 101, .14);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(239,143,189,.20), transparent 22%),
+        radial-gradient(circle at 90% 12%, rgba(217,170,72,.16), transparent 22%),
+        linear-gradient(180deg, #fff9ff 0%, #f6ecff 48%, #fffaf0 100%);
+    }
+    a { color: inherit; }
+    .hero {
+      position: relative;
+      min-height: 88vh;
+      display: grid;
+      place-items: center;
+      padding: 48px 20px 70px;
+      overflow: hidden;
+    }
+    .sparkle {
+      position: absolute;
+      font-size: clamp(18px, 3vw, 38px);
+      opacity: .75;
+      animation: float 4s ease-in-out infinite;
+    }
+    .sparkle.s1 { top: 9%; left: 8%; }
+    .sparkle.s2 { top: 17%; right: 10%; animation-delay: .7s; }
+    .sparkle.s3 { bottom: 16%; left: 11%; animation-delay: 1.2s; }
+    .sparkle.s4 { bottom: 10%; right: 14%; animation-delay: 1.8s; }
+    @keyframes float { 50% { transform: translateY(-10px) rotate(5deg); } }
+    .hero-card {
+      width: min(1080px, 100%);
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 34px;
+      align-items: center;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 34px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: #f3e6ff;
+      color: var(--purple);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 18px 0 12px;
+      font-family: Georgia, serif;
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: .95;
+      color: var(--purple);
+    }
+    .subtitle {
+      font-size: clamp(20px, 2.2vw, 28px);
+      color: #7b5d86;
+      margin: 0 0 18px;
+    }
+    .intro {
+      font-size: 17px;
+      line-height: 1.65;
+      max-width: 640px;
+    }
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 13px 19px;
+      border-radius: 15px;
+      text-decoration: none;
+      font-weight: 900;
+      border: 0;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.03); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple), var(--purple-2));
+      color: white;
+      box-shadow: 0 10px 25px rgba(111,60,166,.28);
+    }
+    .btn-secondary {
+      background: white;
+      color: var(--purple);
+      border: 1px solid #e6d2f8;
+    }
+    .photo-wrap {
+      position: relative;
+      min-height: 470px;
+    }
+    .photo {
+      position: absolute;
+      object-fit: cover;
+      border: 8px solid white;
+      box-shadow: var(--shadow);
+    }
+    .photo.one {
+      width: 72%;
+      height: 82%;
+      right: 0;
+      top: 0;
+      object-position: center 35%;
+      border-radius: 48% 48% 22% 22%;
+    }
+    .photo.two {
+      width: 52%;
+      height: 58%;
+      left: 0;
+      bottom: 0;
+      object-position: center 25%;
+      border-radius: 28% 28% 45% 45%;
+    }
+    .crown {
+      position: absolute;
+      top: -14px;
+      right: 20%;
+      font-size: 62px;
+      transform: rotate(8deg);
+      filter: drop-shadow(0 7px 8px rgba(0,0,0,.12));
+    }
+    .section {
+      width: min(1160px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 30px 0 80px;
+    }
+    .section-head {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: clamp(34px, 5vw, 58px);
+      color: var(--purple);
+    }
+    .section-head p {
+      margin: 10px auto 0;
+      max-width: 700px;
+      line-height: 1.6;
+      color: #745f7d;
+    }
+    .notice {
+      margin: 0 auto 24px;
+      padding: 16px 18px;
+      max-width: 900px;
+      border-radius: 18px;
+      background: #fff7d9;
+      border: 1px solid #f1d887;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+    .filters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+    .filter {
+      border: 1px solid #dfc9ef;
+      background: white;
+      color: var(--purple);
+      padding: 10px 15px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .filter.active {
+      color: white;
+      background: var(--purple);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .card {
+      overflow: hidden;
+      border-radius: 24px;
+      background: rgba(255,255,255,.95);
+      border: 1px solid #eadcf5;
+      box-shadow: 0 10px 30px rgba(86,50,105,.10);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-art {
+      min-height: 175px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 25% 25%, rgba(255,255,255,.88), transparent 12%),
+        linear-gradient(135deg, #f4ddff, #ffe5ef 55%, #fff1c8);
+      font-size: 70px;
+      position: relative;
+    }
+    .product-photo {
+      width: 100%;
+      height: 175px;
+      display: block;
+      object-fit: cover;
+    }
+    .number {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(255,255,255,.88);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      color: var(--purple);
+      font-size: 13px;
+    }
+    .store {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      color: white;
+      background: rgba(81,46,103,.80);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .card-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+    .card p {
+      margin: 0 0 18px;
+      color: #806d88;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+    .card-actions {
+      margin-top: auto;
+      display: grid;
+      gap: 10px;
+    }
+    .buy {
+      background: linear-gradient(135deg, #6f3ca6, #a56fce);
+      color: white;
+    }
+    .choose {
+      background: #fff;
+      color: #6f3ca6;
+      border: 1px solid #dec8ef;
+    }
+    footer {
+      background: #4e2c63;
+      color: white;
+      text-align: center;
+      padding: 45px 20px;
+    }
+    footer h3 {
+      font-family: Georgia, serif;
+      font-size: 30px;
+      margin: 0 0 10px;
+    }
+    footer p {
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.6;
+      opacity: .9;
+    }
+    @media (max-width: 900px) {
+      .hero-card { grid-template-columns: 1fr; }
+      .photo-wrap { min-height: 430px; order: -1; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      .hero { padding: 18px 12px 48px; }
+      .hero-card { border-radius: 24px; padding: 18px; }
+      .photo-wrap { min-height: 360px; }
+      .photo.one { width: 74%; }
+      .photo.two { width: 55%; }
+      .grid { grid-template-columns: 1fr; }
+      .btn { width: 100%; }
+      .card-art { min-height: 150px; }
+      .product-photo { height: 150px; }
+    }
+
+    .magic-nav{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:11px max(18px,calc((100% - 1120px)/2));background:rgba(255,255,255,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(111,60,166,.12)}
+    .magic-nav strong{font-family:Georgia,serif;color:var(--purple)}
+    .magic-nav a{text-decoration:none;color:var(--purple);font-weight:900}
+    .countdown{width:min(900px,calc(100% - 28px));margin:-36px auto 22px;background:#4e2c63;color:#fff;padding:22px;border-radius:24px;box-shadow:var(--shadow);position:relative;z-index:3}
+    .count-title{text-align:center;font-family:Georgia,serif;font-size:24px;margin-bottom:5px}
+    .event-date{text-align:center;margin:0 0 15px;font-weight:900;color:#f6df9f}
+    .clock{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.time{text-align:center;background:rgba(255,255,255,.1);padding:13px 8px;border-radius:16px}.time strong{display:block;font-size:29px}.time span{font-size:11px;text-transform:uppercase;letter-spacing:.7px;opacity:.85}
+    .rsvp{width:min(900px,calc(100% - 28px));margin:0 auto 70px;display:grid;grid-template-columns:220px 1fr;overflow:hidden;background:rgba(255,255,255,.95);border:1px solid #eadcf5;border-radius:24px;box-shadow:var(--shadow)}
+    .rsvp-photo{width:100%;height:100%;min-height:230px;object-fit:cover;object-position:center 30%}
+    .rsvp-content{padding:26px 30px;align-self:center}.rsvp-kicker{display:inline-block;margin-bottom:8px;color:var(--gold);font-size:13px;font-weight:900;letter-spacing:.7px;text-transform:uppercase}.rsvp h2{margin:0 0 9px;color:var(--purple);font-family:Georgia,serif;font-size:32px}.rsvp p{margin:0;color:#745f7d;line-height:1.55}.rsvp .btn{margin-top:18px;width:max-content}
+    .search-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin:0 auto 18px}.gift-search{width:100%;min-height:48px;border:1px solid #dfc9ef;border-radius:15px;padding:0 15px;background:white;outline:none}
+    .card.reserved{opacity:.72}.reserved-ribbon{display:none;position:absolute;z-index:4;left:-38px;top:16px;background:#438b66;color:white;padding:8px 44px;transform:rotate(-35deg);font-size:11px;font-weight:900}.card.reserved .reserved-ribbon{display:block}.card{position:relative}.unchoose{background:#eef8f2;color:#2e7653;border:1px solid #b9ddc9}
+    @media(max-width:620px){.clock{gap:6px}.time strong{font-size:23px}.search-row{grid-template-columns:1fr}.magic-nav{padding:10px 14px}.rsvp{grid-template-columns:1fr}.rsvp-photo{height:260px;min-height:0}.rsvp-content{padding:24px 20px}.rsvp h2{font-size:28px}.rsvp .btn{width:100%}}
+  </style>
+</head>
+<body>
+<nav class="magic-nav"><strong>👑 Reino Encantado da Luna</strong><a href="#presentes">Ver presentes</a></nav>
+
+  <header class="hero">
+    <span class="sparkle s1">✨</span>
+    <span class="sparkle s2">🦋</span>
+    <span class="sparkle s3">⭐</span>
+    <span class="sparkle s4">✨</span>
+
+    <div class="hero-card">
+      <div>
+        <span class="eyebrow">👑 Reino Encantado da Luna</span>
+        <h1>Lista de Presentes da Luna</h1>
+        <p class="subtitle">Uma seleção cheia de magia para os 4 aninhos dela. A festa será em 5 de setembro, às 14h.</p>
+        <p class="intro">
+          Muitas pessoas perguntaram o que a Luna gostaria de ganhar. Para facilitar,
+          reunimos algumas sugestões que ela vai amar. A lista é apenas uma inspiração:
+          o mais importante é celebrar esse momento com carinho e alegria.
+        </p>
+        <div class="hero-buttons">
+          <a href="#presentes" class="btn btn-primary">Ver os presentes ✨</a>
+          <a href="https://wa.me/5511965833516?text=Oi%20Dani!%20Tenho%20uma%20d%C3%BAvida%20sobre%20a%20lista%20de%20presentes%20da%20Luna."
+             target="_blank" rel="noopener" class="btn btn-secondary">Falar com a Dani</a>
+        </div>
+      </div>
+
+      <div class="photo-wrap" aria-label="Fotos da Luna">
+        <div class="crown">👑</div>
+        <img class="photo one" src="imagens/luna-elsa-01.jpeg" alt="Luna fantasiada de Elsa" />
+        <img class="photo two" src="imagens/luna-elsa-03.jpeg" alt="Retrato da Luna fantasiada de Elsa" />
+      </div>
+    </div>
+  </header>
+
+
+  <section class="countdown" aria-label="Contagem regressiva para o aniversário">
+    <div class="count-title">Falta pouco para o grande dia ✨</div>
+    <div class="event-date">5 de setembro de 2026, às 14h</div>
+    <div class="clock">
+      <div class="time"><strong id="days">0</strong><span>dias</span></div>
+      <div class="time"><strong id="hours">0</strong><span>horas</span></div>
+      <div class="time"><strong id="minutes">0</strong><span>minutos</span></div>
+      <div class="time"><strong id="seconds">0</strong><span>segundos</span></div>
+    </div>
+  </section>
+
+  <section class="rsvp" aria-labelledby="rsvp-title">
+    <img class="rsvp-photo" src="imagens/luna-elsa-02.jpeg" alt="Luna fantasiada de Elsa" />
+    <div class="rsvp-content">
+      <span class="rsvp-kicker">Confirmação de presença</span>
+      <h2 id="rsvp-title">Confirme até 15 de agosto</h2>
+      <p>Vamos amar celebrar esse dia com você! Confirme sua presença e informe quantas pessoas irão à festa.</p>
+      <a class="btn btn-primary"
+         href="https://wa.me/5511965833516?text=Oi%20Dani!%20Confirmo%20minha%20presen%C3%A7a%20no%20anivers%C3%A1rio%20da%20Luna%20no%20dia%2005%2F09%2C%20%C3%A0s%2014h.%20Nome%3A%20____.%20Quantidade%20de%20pessoas%3A%20____."
+         target="_blank" rel="noopener noreferrer">Confirmar pelo WhatsApp</a>
+    </div>
+  </section>
+
+  <main id="presentes" class="section">
+    <div class="section-head">
+      <h2>Escolha um presente encantado</h2>
+      <p>
+        Clique em <strong>Comprar agora</strong> para abrir o produto na loja.
+        Depois da compra, clique em <strong>Já escolhi este presente</strong> para avisar a Dani pelo WhatsApp.
+      </p>
+    </div>
+
+    <div class="notice">
+      <strong>Importante:</strong> a marcação visual de “escolhido” fica salva no aparelho de quem acessa. O botão também abre uma mensagem pronta no WhatsApp da Dani, que poderá controlar a reserva para todos. Uma sincronização automática entre visitantes exigiria banco de dados.
+    </div>
+
+    <div class="search-row"><input id="giftSearch" class="gift-search" type="search" placeholder="Buscar por número ou loja..."></div>
+
+    <div class="filters">
+      <button class="filter active" data-store="Todos">Todos</button>
+      <button class="filter" data-store="Shopee">Shopee</button>
+      <button class="filter" data-store="Mercado Livre">Mercado Livre</button>
+    </div>
+
+    <section id="grid" class="grid" aria-label="Lista de presentes"></section>
+  </main>
+
+  <footer>
+    <h3>Obrigada por fazer parte do Reino Encantado da Luna! ✨</h3>
+    <p>
+      Sua presença, seu carinho e o amor por ela são os maiores presentes.
+      Com carinho, Dani, Felipe e Luna.
+    </p>
+  </footer>
+
+  <script>
+    const products = [
+      {"id": 1, "store": "Shopee", "url": "https://s.shopee.com.br/9AN06XR2HK", "name": "Rinquedo Lousa Magnetica 3 Em 1 Infantil Imã Educativo Madeira Pedagogico Com Canetinha", "image": "imagens/presente-01-shopee.webp"},
+      {"id": 2, "store": "Shopee", "url": "https://s.shopee.com.br/4qE0wcp7Va", "name": "Lousa Mágica LED Apagável - Quadro de Mensagens Iluminado, Brinquedo Educativo Infantil 30x20cm", "image": "imagens/presente-02-shopee.webp"},
+      {"id": 3, "store": "Shopee", "url": "https://s.shopee.com.br/8Knt78MmbR", "name": "Casinha Miniatura De Montar 3d Castelo De Princesa Infantil", "image": "imagens/presente-03-shopee.webp"},
+      {"id": 4, "store": "Shopee", "url": "https://s.shopee.com.br/7VEm7l8eEj", "name": "Princesa Magnética Vestir Boneca De Papel Fingir Jogar Jogo, Atividades De Carro De Brinquedo De Viagem Na Estrada, Qu", "image": "imagens/presente-04-shopee.webp"},
+      {"id": 5, "store": "Shopee", "url": "https://s.shopee.com.br/7prcWPbEQO", "name": "Brinquedo de vestir magnético para crianças, meninos e meninas, quebra-cabeça, fácil de transportar. Presente de Natal.", "image": "imagens/presente-05-shopee.webp"},
+      {"id": 6, "store": "Shopee", "url": "https://s.shopee.com.br/9fJGho32vA", "name": "Blocos de Construção Magnéticos de Montar Brinquedo Infantil Craft Educativo", "image": "imagens/presente-06-shopee.webp"},
+      {"id": 7, "store": "Shopee", "url": "https://s.shopee.com.br/4qE0x5v0MZ", "name": "Casinha de Boneca com 14 Quartos - Inclui Corda de Luzes | Brinquedo para Crianças Presente De Aniversário", "image": "imagens/presente-07-shopee.webp"},
+      {"id": 8, "store": "Shopee", "url": "https://s.shopee.com.br/2qSwZROQ3m", "name": "Kit Beleza Infantil Maleta Portátil Com Espelho, Maquiagem E Manicure Não Tóxico Presente Aniversário Criança", "image": "imagens/presente-08-shopee.webp"},
+      {"id": 9, "store": "Shopee", "url": "https://s.shopee.com.br/5fn7wh7x6l", "name": "Kit Quem Criou Deus? + Porque Não Vemos Deus? + Será Que Deus é Forte? + Onde Deus Mora?", "image": "imagens/presente-09-shopee.webp"},
+      {"id": 10, "store": "Shopee", "url": "https://s.shopee.com.br/50XR9WPmG8", "name": "Kit 2/4 Caderno Boneca Adesiva 3D Roupinhas Para Trocar Acessórios E Montar Comodos Diy Com Pinça", "image": "imagens/presente-10-shopee.webp"},
+      {"id": 11, "store": "Shopee", "url": "https://s.shopee.com.br/BSBOfMXXE", "name": "KIT DE QUEBRA CABEÇA 3D PUZZLE BRINQUEDO APOAPP INFANTIL EDUCATIVO CERTIFICADO PELO INMETRO + 3 ANOS", "image": "imagens/presente-11-shopee.webp"},
+      {"id": 12, "store": "Shopee", "url": "https://s.shopee.com.br/7fYCKdOk7M", "name": "KIT 68/86/150/168 Estojo Maleta Pintura Infantil com 150/168 Peças Paleta Canetinha Giz Lápis Cores -Techo Pro", "image": "imagens/presente-12-shopee.webp"},
+      {"id": 13, "store": "Shopee", "url": "https://s.shopee.com.br/5fn7x5gFsM", "name": "Conjunto De Marcadores Flutuantes À Base De Água, 8 Cores Com Colher De Brinquedo, Canetas Educacionais De Arte Infant", "image": "imagens/presente-13-shopee.webp"},
+      {"id": 14, "store": "Shopee", "url": "https://s.shopee.com.br/8pk9ixp3TT", "name": "Kit Maquiagem Infantil Completo Com Espelho e Acessórios Não Tóxico", "image": "imagens/presente-14-shopee.webp"},
+      {"id": 15, "store": "Shopee", "url": "https://s.shopee.com.br/18lCkmg3V", "name": "Conjunto de Maquiagem Infantil Lavável em Maleta, Brinquedo de Maquiagem Seguro para Meninas Não Tóxico", "image": "imagens/presente-15-shopee.webp"},
+      {"id": 16, "store": "Shopee", "url": "https://s.shopee.com.br/qhsCYPN3L", "name": "Vestido Infantil Menina Com Bolsinha Festa Aniversario Rodado Princesa Luxo Fofinho Passeio Casual Modinha Roupa", "image": "imagens/presente-16-shopee.webp"},
+      {"id": 17, "store": "Shopee", "url": "https://s.shopee.com.br/BSBPOhtJu", "name": "Conjunto Infantil Canguru Capivara Arco-Íris Estampa Moda Inverno Confortável Menino Menina", "image": "imagens/presente-17-shopee.webp"},
+      {"id": 18, "store": "Shopee", "url": "https://s.shopee.com.br/9KgQKGQG2L", "name": "Camiseta De Algodão Infantil Menina T-shirt Huntrix Cores Diferenciadas", "image": "imagens/presente-18-shopee.webp"},
+      {"id": 19, "store": "Shopee", "url": "https://s.shopee.com.br/3B5myyqvEG", "name": "Conjunto Infantil Menina Linho Batinha Laise Manga Bufante", "image": "imagens/presente-19-shopee.webp"},
+      {"id": 20, "store": "Shopee", "url": "https://s.shopee.com.br/111IP7Clz4", "name": "Tenis Infantil estiloso GUERREIRAS DO KPOP menina Lançamento confortavel SENSAÇÃO DO MOMENTO REF.7", "image": "imagens/presente-20-shopee.webp"},
+      {"id": 21, "store": "Shopee", "url": "https://s.shopee.com.br/qhsCqqCFK", "name": "Kit 3 Pares Tênis Infantil Menina Escolar e Sandália Confortável Volta as Aulas", "image": "imagens/presente-21-shopee.webp"},
+      {"id": 22, "store": "Shopee", "url": "https://s.shopee.com.br/4fualvwnIP", "name": "Tênis Para Meninas Crianças Leves E Casuais 4 ~ 16 Anos Tamanho27-38", "image": "imagens/presente-22-shopee.webp"},
+      {"id": 23, "store": "Shopee", "url": "https://s.shopee.com.br/80B2k7iULp", "name": "Kit 3 Calças de Moletom para Menina - Frio Inverno Escolar - Estilo Juvenil", "image": "imagens/presente-23-shopee.webp"},
+      {"id": 24, "store": "Shopee", "url": "https://s.shopee.com.br/9UzqWuuX3k", "name": "Calça Alfaiataria Luxo Infantil e Juvenil Menina 4 a 8 Cargo Moda Blogueira Menina nude", "image": "imagens/presente-24-shopee.webp"},
+      {"id": 25, "store": "Shopee", "url": "https://s.shopee.com.br/9fJGjK0Gyg", "name": "Cartão de Aprendizagem Infantil Português (Portugal) Inglês, Brinquedo Educativo com Som", "image": "imagens/presente-25-shopee.webp"},
+      {"id": 26, "store": "Shopee", "url": "https://s.shopee.com.br/50XRAooesk", "name": "Jogo Pedagógico Memórias Educativas de Sílabas Alfabetização Infantil", "image": "imagens/presente-26-shopee.webp"},
+      {"id": 27, "store": "Shopee", "url": "https://s.shopee.com.br/1VxZ0RSL03", "name": "Camera Infantil Digital【Tira Foto De Verdade】 Filmadora Infantil Mini Maquina Fotografica Fotografa E Filma", "image": "imagens/presente-27-shopee.webp"},
+      {"id": 28, "store": "Mercado Livre", "url": "https://www.mercadolivre.com.br/brinquedo-casinha-de-boneca-menina-castelo-princesa-120-pecas-completa-casa-dos-sonhos/p/MLB66060672?pdp_filters=item_id%3AMLB6326029746#origin=share&sid=share&wid=MLB6326029746", "name": "Brinquedo Casinha de Boneca Menina Castelo Princesa — 120 Peças Completa Casa dos Sonhos", "image": "imagens/presente-28-casinha-de-boneca.webp"},
+      {"id": 29, "store": "Mercado Livre", "url": "https://meli.la/1fQTySb", "name": "Microfone Infantil Bluetooth Rosa Sem Fio com Luzes e Efeitos Sonoros", "image": "imagens/presente-29-microfone-infantil.webp"},
+      {"id": 30, "store": "Mercado Livre", "url": "https://meli.la/21ytNLE", "name": "Laboratório de Química Show da Luna — 24 Experiências Nig", "image": "imagens/presente-30-laboratorio-quimica.webp"},
+      {"id": 31, "store": "Shopee", "url": "https://s.shopee.com.br/1Vxs67nZIH", "name": "Conjunto Infantil Menina - feminina Short Saia k-pop + Confortavel", "image": "imagens/presente-31-shopee.webp"},
+      {"id": 32, "store": "Shopee", "url": "https://s.shopee.com.br/903t22RXxX", "name": "Livro magnético de adesivos silencioso para educação infantil, brinquedo educativo de montagem e rasgar à mão para crian", "image": "imagens/presente-32-shopee.webp"},
+      {"id": 33, "store": "Shopee", "url": "https://s.shopee.com.br/6L37rCEMJt", "name": "Câmera Infantil Mini Recarregável com Capa, Função de Jogos, Tirar Fotos e Gravar Vídeos", "image": "imagens/presente-33-shopee.webp"},
+      {"id": 34, "store": "Shopee", "url": "https://s.shopee.com.br/9pd01jXfhH", "name": "Conjunto de Figuras K-pop Hunter Girl, Presente Perfeito para Fãs e Colecionadores com Design Moderno", "image": "imagens/presente-34-shopee.webp"},
+      {"id": 35, "store": "Shopee", "url": "https://s.shopee.com.br/903t2YEcWJ", "name": "Walkie-Talkie Infantil com Vídeo | Comunicação Sem Fio | Tela LCD | 3 Modos de Voz | Alcance até 400m", "image": "imagens/presente-35-shopee.webp"},
+      {"id": 36, "store": "Shopee", "url": "https://s.shopee.com.br/20u8iHUrMw", "name": "Caneta 3D Impressora Manual Infantil e Adulto Com Filamentos DIY Filamento Plastico Seguro Para Crianças", "image": "imagens/presente-36-shopee.webp"}
+    ];
+    const whatsapp = "5511965833516";
+    let currentStore = "Todos";
+    let searchText = "";
+    const reserved = new Set(JSON.parse(localStorage.getItem("lunaReserved") || "[]"));
+
+    function saveReserved() { localStorage.setItem("lunaReserved", JSON.stringify([...reserved])); }
+    function reserveGift(id) {
+      const p = products.find(x => x.id === id);
+      reserved.add(id); saveReserved(); render();
+      const message = encodeURIComponent(`Oi Dani! Eu escolhi o presente nº ${String(p.id).padStart(2,"0")} — ${p.name} — para a Luna.`);
+      window.open(`https://wa.me/${whatsapp}?text=${message}`, "_blank");
+    }
+    function unreserveGift(id) { reserved.delete(id); saveReserved(); render(); }
+
+    function render() {
+      const grid = document.getElementById("grid");
+      const selected = products.filter(p => {
+        const storeOK = currentStore === "Todos" || p.store === currentStore;
+        const hay = `${p.id} ${p.name} ${p.store}`.toLowerCase();
+        return storeOK && hay.includes(searchText);
+      });
+      grid.innerHTML = selected.map(p => {
+        const chosen = reserved.has(p.id);
+        return `
+          <article class="card ${chosen ? "reserved" : ""}">
+            <div class="reserved-ribbon">ESCOLHIDO</div>
+            <div class="card-art">
+              <span class="number">Presente ${String(p.id).padStart(2,"0")}</span>
+              <span class="store">${p.store}</span>
+              <img class="product-photo"
+                   src="${p.image || "imagens/foto-pendente.svg"}"
+                   alt="${p.image ? p.name : `Foto pendente de revisão do presente ${String(p.id).padStart(2,"0")}`}"
+                   loading="lazy"
+                   onerror="this.onerror=null;this.src='imagens/foto-pendente.svg'">
+            </div>
+            <div class="card-body">
+              <h3>${p.name}</h3>
+              <p>Uma sugestão escolhida com carinho para os 4 anos da Luna.</p>
+              <div class="card-actions">
+                <a class="btn buy" href="${p.url}" target="_blank" rel="noopener noreferrer">Comprar agora</a>
+                ${chosen
+                  ? `<button class="btn unchoose" onclick="unreserveGift(${p.id})">Desmarcar neste aparelho</button>`
+                  : `<button class="btn choose" onclick="reserveGift(${p.id})">Já escolhi este presente</button>`}
+              </div>
+            </div>
+          </article>`;
+      }).join("") || '<div style="grid-column:1/-1;text-align:center;padding:40px;background:white;border-radius:20px">Nenhum presente encontrado.</div>';
+    }
+
+    document.querySelectorAll(".filter").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+        button.classList.add("active"); currentStore = button.dataset.store; render();
+      });
+    });
+    document.getElementById("giftSearch").addEventListener("input", e => { searchText = e.target.value.toLowerCase().trim(); render(); });
+
+    const target = new Date("2026-09-05T14:00:00-03:00").getTime();
+    function tick() {
+      let diff = Math.max(0, target - Date.now());
+      const d = Math.floor(diff / 86400000); diff %= 86400000;
+      const h = Math.floor(diff / 3600000); diff %= 3600000;
+      const m = Math.floor(diff / 60000); diff %= 60000;
+      const sec = Math.floor(diff / 1000);
+      document.getElementById("days").textContent=d; document.getElementById("hours").textContent=h;
+      document.getElementById("minutes").textContent=m; document.getElementById("seconds").textContent=sec;
+    }
+    tick(); setInterval(tick,1000); render();
+  </script>
+</body>
+</html>
