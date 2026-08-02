@@ -91,6 +91,24 @@
       line-height: 1.65;
       max-width: 640px;
     }
+    .gift-sizes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .size-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 14px;
+      border: 1px solid #ead6f7;
+      border-radius: 999px;
+      background: rgba(255,255,255,.9);
+      color: #684778;
+      font-size: 14px;
+    }
+    .size-chip strong { color: var(--purple); }
     .hero-buttons {
       display: flex;
       flex-wrap: wrap;
@@ -123,34 +141,24 @@
     }
     .photo-wrap {
       position: relative;
-      min-height: 470px;
+      display: grid;
+      place-items: center;
+      padding: 12px 0;
     }
     .photo {
-      position: absolute;
-      object-fit: cover;
+      position: relative;
+      display: block;
+      width: min(92%, 430px);
+      height: auto;
       border: 8px solid white;
+      border-radius: 36px;
       box-shadow: var(--shadow);
-    }
-    .photo.one {
-      width: 72%;
-      height: 82%;
-      right: 0;
-      top: 0;
-      object-position: center 35%;
-      border-radius: 48% 48% 22% 22%;
-    }
-    .photo.two {
-      width: 52%;
-      height: 58%;
-      left: 0;
-      bottom: 0;
-      object-position: center 25%;
-      border-radius: 28% 28% 45% 45%;
     }
     .crown {
       position: absolute;
-      top: -14px;
-      right: 20%;
+      z-index: 2;
+      top: -20px;
+      right: 8%;
       font-size: 62px;
       transform: rotate(8deg);
       filter: drop-shadow(0 7px 8px rgba(0,0,0,.12));
@@ -308,15 +316,13 @@
     }
     @media (max-width: 900px) {
       .hero-card { grid-template-columns: 1fr; }
-      .photo-wrap { min-height: 430px; order: -1; }
+      .photo-wrap { order: -1; }
       .grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 620px) {
       .hero { padding: 18px 12px 48px; }
       .hero-card { border-radius: 24px; padding: 18px; }
-      .photo-wrap { min-height: 360px; }
-      .photo.one { width: 74%; }
-      .photo.two { width: 55%; }
+      .photo { width: 100%; border-radius: 28px; }
       .grid { grid-template-columns: 1fr; }
       .btn { width: 100%; }
       .card-art { min-height: 150px; }
@@ -353,10 +359,13 @@
         <h1>Lista de Presentes da Luna</h1>
         <p class="subtitle">Uma seleção cheia de magia para os 4 aninhos dela. A festa será em 5 de setembro, às 14h.</p>
         <p class="intro">
-          Muitas pessoas perguntaram o que a Luna gostaria de ganhar. Para facilitar,
-          reunimos algumas sugestões que ela vai amar. A lista é apenas uma inspiração:
-          o mais importante é celebrar esse momento com carinho e alegria.
+          Esta lista é apenas uma sugestão de presentes. Fiquem à vontade para presentear
+          a Luna com o que sentirem no coração — todo carinho será muito bem-vindo.
         </p>
+        <div class="gift-sizes" aria-label="Tamanhos da Luna">
+          <span class="size-chip">👗 Tamanho de roupa: <strong>6</strong></span>
+          <span class="size-chip">👟 Tamanho de calçado: <strong>27/28</strong></span>
+        </div>
         <div class="hero-buttons">
           <a href="#presentes" class="btn btn-primary">Ver os presentes ✨</a>
           <a href="https://wa.me/5511965833516?text=Oi%20Dani!%20Tenho%20uma%20d%C3%BAvida%20sobre%20a%20lista%20de%20presentes%20da%20Luna."
@@ -364,10 +373,9 @@
         </div>
       </div>
 
-      <div class="photo-wrap" aria-label="Fotos da Luna">
+      <div class="photo-wrap" aria-label="Foto da Luna">
         <div class="crown">👑</div>
-        <img class="photo one" src="imagens/luna-elsa-01.jpeg" alt="Luna fantasiada de Elsa" />
-        <img class="photo two" src="imagens/luna-elsa-03.jpeg" alt="Retrato da Luna fantasiada de Elsa" />
+        <img class="photo" src="imagens/luna-reino-encantado.webp" alt="Luna fantasiada de Elsa em frente a um castelo encantado" />
       </div>
     </div>
   </header>
@@ -385,7 +393,7 @@
   </section>
 
   <section class="rsvp" aria-labelledby="rsvp-title">
-    <img class="rsvp-photo" src="imagens/luna-elsa-02.jpeg" alt="Luna fantasiada de Elsa" />
+    <img class="rsvp-photo" src="imagens/luna-reino-encantado.webp" alt="Luna fantasiada de Elsa em frente a um castelo encantado" />
     <div class="rsvp-content">
       <span class="rsvp-kicker">Confirmação de presença</span>
       <h2 id="rsvp-title">Confirme até 15 de agosto</h2>
@@ -406,7 +414,7 @@
     </div>
 
     <div class="notice">
-      <strong>Importante:</strong> a marcação visual de “escolhido” fica salva no aparelho de quem acessa. O botão também abre uma mensagem pronta no WhatsApp da Dani, que poderá controlar a reserva para todos. Uma sincronização automática entre visitantes exigiria banco de dados.
+      <strong>Para evitar presentes repetidos:</strong> depois de comprar, clique em “Já escolhi este presente” para avisar a Dani pelo WhatsApp. A loja não atualiza esta página automaticamente e, por enquanto, a marcação visual fica salva apenas neste aparelho.
     </div>
 
     <div class="search-row"><input id="giftSearch" class="gift-search" type="search" placeholder="Buscar por número ou loja..."></div>
