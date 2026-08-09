@@ -194,6 +194,15 @@
       line-height: 1.5;
       font-size: 14px;
     }
+    .sync-status {
+      margin: -12px auto 24px;
+      max-width: 900px;
+      color: #5f4c68;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .sync-status[data-state="error"] { color: #a33b45; }
     .filters {
       display: flex;
       justify-content: center;
@@ -296,6 +305,10 @@
       background: #fff;
       color: #6f3ca6;
       border: 1px solid #dec8ef;
+    }
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: .72;
     }
     footer {
       background: #4e2c63;
@@ -414,8 +427,10 @@
     </div>
 
     <div class="notice">
-      <strong>Para evitar presentes repetidos:</strong> depois de comprar, clique em “Já escolhi este presente” para avisar a Dani pelo WhatsApp. A loja não atualiza esta página automaticamente e, por enquanto, a marcação visual fica salva apenas neste aparelho.
+      <strong>Para evitar presentes repetidos:</strong> depois de comprar, clique em “Já escolhi este presente”. Ele aparecerá como <strong>ESCOLHIDO</strong> para todas as pessoas. O nome de quem escolheu não será exibido.
     </div>
+
+    <div id="syncStatus" class="sync-status" role="status" aria-live="polite">Carregando as escolhas...</div>
 
     <div class="search-row"><input id="giftSearch" class="gift-search" type="search" placeholder="Buscar por número ou loja..."></div>
 
@@ -436,6 +451,7 @@
     </p>
   </footer>
 
+  <script src="supabase-config.js"></script>
   <script>
     const products = [
       {"id": 1, "store": "Shopee", "url": "https://s.shopee.com.br/9AN06XR2HK", "name": "Rinquedo Lousa Magnetica 3 Em 1 Infantil Imã Educativo Madeira Pedagogico Com Canetinha", "image": "imagens/presente-01-shopee.webp"},
@@ -490,16 +506,128 @@
     const whatsapp = "5511965833516";
     let currentStore = "Todos";
     let searchText = "";
-    const reserved = new Set(JSON.parse(localStorage.getItem("lunaReserved") || "[]"));
+    const reserved = new Set();
+    const pendingReservations = new Set();
+    const supabaseConfig = window.LUNA_SUPABASE || {};
+    const sharedReservationsEnabled = Boolean(supabaseConfig.url && supabaseConfig.anonKey);
+    let syncReady = false;
+    let reservationTokens = {};
 
-    function saveReserved() { localStorage.setItem("lunaReserved", JSON.stringify([...reserved])); }
-    function reserveGift(id) {
-      const p = products.find(x => x.id === id);
-      reserved.add(id); saveReserved(); render();
-      const message = encodeURIComponent(`Oi Dani! Eu escolhi o presente nº ${String(p.id).padStart(2,"0")} — ${p.name} — para a Luna.`);
-      window.open(`https://wa.me/${whatsapp}?text=${message}`, "_blank");
+    try {
+      reservationTokens = JSON.parse(localStorage.getItem("lunaReservationTokens") || "{}");
+    } catch (_) {
+      reservationTokens = {};
     }
-    function unreserveGift(id) { reserved.delete(id); saveReserved(); render(); }
+
+    function saveReservationTokens() {
+      localStorage.setItem("lunaReservationTokens", JSON.stringify(reservationTokens));
+    }
+
+    function setSyncStatus(message, state = "") {
+      const status = document.getElementById("syncStatus");
+      status.textContent = message;
+      status.dataset.state = state;
+    }
+
+    async function supabaseRequest(path, options = {}) {
+      const response = await fetch(`${supabaseConfig.url}/rest/v1/${path}`, {
+        ...options,
+        headers: {
+          apikey: supabaseConfig.anonKey,
+          Authorization: `Bearer ${supabaseConfig.anonKey}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+      const bodyText = await response.text();
+      let data = null;
+      try { data = bodyText ? JSON.parse(bodyText) : null; } catch (_) { data = bodyText; }
+      if (!response.ok) {
+        const error = new Error(data?.message || "Não foi possível atualizar a escolha.");
+        error.status = response.status;
+        error.code = data?.code;
+        throw error;
+      }
+      return data;
+    }
+
+    async function loadReservations() {
+      if (!sharedReservationsEnabled) {
+        syncReady = false;
+        setSyncStatus("A reserva compartilhada ainda precisa ser conectada ao Supabase.", "error");
+        render();
+        return;
+      }
+      try {
+        const rows = await supabaseRequest("gift_reservations?select=gift_id");
+        reserved.clear();
+        rows.forEach(row => reserved.add(row.gift_id));
+        syncReady = true;
+        setSyncStatus(`${reserved.size} presente${reserved.size === 1 ? "" : "s"} já escolhido${reserved.size === 1 ? "" : "s"}.`);
+        render();
+      } catch (error) {
+        setSyncStatus("Não foi possível carregar as escolhas. Tente novamente em instantes.", "error");
+        render();
+      }
+    }
+
+    async function reserveGift(id) {
+      if (!syncReady || pendingReservations.has(id)) return;
+      const product = products.find(item => item.id === id);
+      const reservationToken = crypto.randomUUID();
+      const whatsappWindow = window.open("", "_blank");
+      pendingReservations.add(id);
+      setSyncStatus("Salvando sua escolha...");
+      render();
+      try {
+        await supabaseRequest("gift_reservations", {
+          method: "POST",
+          headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({ gift_id: id, reservation_token: reservationToken })
+        });
+        reservationTokens[id] = reservationToken;
+        saveReservationTokens();
+        reserved.add(id);
+        setSyncStatus("Presente escolhido! A marcação já está visível para todos.");
+        const message = encodeURIComponent(`Oi Dani! Eu escolhi o presente nº ${String(product.id).padStart(2,"0")} — ${product.name} — para a Luna.`);
+        if (whatsappWindow) whatsappWindow.location.href = `https://wa.me/${whatsapp}?text=${message}`;
+      } catch (error) {
+        if (whatsappWindow) whatsappWindow.close();
+        await loadReservations();
+        if (error.status === 409 || error.code === "23505") {
+          alert("Este presente acabou de ser escolhido por outra pessoa. Por favor, escolha outro.");
+        } else {
+          alert("Não foi possível salvar sua escolha agora. Por favor, tente novamente.");
+        }
+      } finally {
+        pendingReservations.delete(id);
+        render();
+      }
+    }
+
+    async function unreserveGift(id) {
+      const reservationToken = reservationTokens[id];
+      if (!reservationToken || pendingReservations.has(id)) return;
+      pendingReservations.add(id);
+      setSyncStatus("Desmarcando sua escolha...");
+      render();
+      try {
+        const removed = await supabaseRequest("rpc/unreserve_gift", {
+          method: "POST",
+          body: JSON.stringify({ p_gift_id: id, p_reservation_token: reservationToken })
+        });
+        if (!removed) throw new Error("Reserva não encontrada.");
+        delete reservationTokens[id];
+        saveReservationTokens();
+        reserved.delete(id);
+        setSyncStatus("Escolha desmarcada. O presente está disponível novamente.");
+      } catch (_) {
+        setSyncStatus("Não foi possível desmarcar agora. Tente novamente em instantes.", "error");
+      } finally {
+        pendingReservations.delete(id);
+        render();
+      }
+    }
 
     function render() {
       const grid = document.getElementById("grid");
@@ -510,6 +638,8 @@
       });
       grid.innerHTML = selected.map(p => {
         const chosen = reserved.has(p.id);
+        const owned = Boolean(reservationTokens[p.id]);
+        const pending = pendingReservations.has(p.id);
         return `
           <article class="card ${chosen ? "reserved" : ""}">
             <div class="reserved-ribbon">ESCOLHIDO</div>
@@ -527,9 +657,15 @@
               <p>Uma sugestão escolhida com carinho para os 4 anos da Luna.</p>
               <div class="card-actions">
                 <a class="btn buy" href="${p.url}" target="_blank" rel="noopener noreferrer">Comprar agora</a>
-                ${chosen
-                  ? `<button class="btn unchoose" onclick="unreserveGift(${p.id})">Desmarcar neste aparelho</button>`
-                  : `<button class="btn choose" onclick="reserveGift(${p.id})">Já escolhi este presente</button>`}
+                ${!syncReady
+                  ? `<button class="btn choose" disabled>Carregando escolhas...</button>`
+                  : pending
+                    ? `<button class="btn choose" disabled>Aguarde...</button>`
+                    : chosen && owned
+                      ? `<button class="btn unchoose" onclick="unreserveGift(${p.id})">Desmarcar minha escolha</button>`
+                      : chosen
+                        ? `<button class="btn choose" disabled>Presente já escolhido</button>`
+                        : `<button class="btn choose" onclick="reserveGift(${p.id})">Já escolhi este presente</button>`}
               </div>
             </div>
           </article>`;
@@ -555,6 +691,11 @@
       document.getElementById("minutes").textContent=m; document.getElementById("seconds").textContent=sec;
     }
     tick(); setInterval(tick,1000); render();
+    loadReservations();
+    setInterval(loadReservations, 15000);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") loadReservations();
+    });
   </script>
 </body>
 </html>
